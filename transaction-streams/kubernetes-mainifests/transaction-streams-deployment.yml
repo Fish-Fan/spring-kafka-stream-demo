@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transaction-streams
+  labels:
+    app: transaction-streams
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: transaction-streams
+      labels:
+        app: transaction-streams
+    spec:
+      containers:
+        - name: transaction-streams
+          image: transaction-streams
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: "metadata.namespace"
+            - name: SPRING_CLOUD_STEAM_KAFKA_BINDER_BROKERS
+              value: 'PLAINTEXT://broker:9092'
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: transaction-streams

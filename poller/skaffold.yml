@@ -1,0 +1,22 @@
+apiVersion: skaffold/v1beta15
+kind: Config
+build:
+  tagPolicy:
+    sha256: {}
+  artifacts:
+    - image: poller
+      context: ..
+      jib: {
+        args: ["-DskipTests=true"],
+        project: "poller",
+      }
+
+deploy:
+  kubectl:
+    manifests:
+      - ./kubernetes-mainifests/**.yml
+profiles:
+  - name: dockerfile
+    build:
+      artifacts:
+        - image: poller
